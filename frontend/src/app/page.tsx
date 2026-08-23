@@ -12,6 +12,7 @@ import {
   Product, ProductIntelligenceCard, BatchGenerationResponse, DashboardOverview
 } from '@/lib/api';
 import VoiceoverVideoStudioModal from '@/components/VoiceoverVideoStudioModal';
+import PromptToVideoFlowModal from '@/components/PromptToVideoFlowModal';
 
 export default function DashboardPage() {
   const [dashboard, setDashboard] = useState<DashboardOverview | null>(null);
@@ -26,6 +27,7 @@ export default function DashboardPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [isVoiceoverStudioOpen, setIsVoiceoverStudioOpen] = useState<boolean>(false);
+  const [isPromptToVideoOpen, setIsPromptToVideoOpen] = useState<boolean>(false);
   const [isPlayingVideo, setIsPlayingVideo] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [currentPlaySec, setCurrentPlaySec] = useState<number>(0);
@@ -147,11 +149,18 @@ export default function DashboardPage() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setIsVoiceoverStudioOpen(true)}
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-pink-600/80 to-purple-600/80 hover:from-pink-500 hover:to-purple-500 border border-pink-400/40 text-xs font-bold text-white transition-all cursor-pointer shadow-md shadow-pink-600/20"
+              onClick={() => setIsPromptToVideoOpen(true)}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border border-purple-400/50 text-xs font-bold text-white transition-all cursor-pointer shadow-md shadow-purple-600/30 hover:scale-105"
             >
-              <Mic className="w-3.5 h-3.5 text-yellow-300 animate-pulse" />
-              <span>🎙️ สตูดิโอแปลงเสียงเป็นวิดีโอ (Audio to Video)</span>
+              <Sparkles className="w-3.5 h-3.5 text-yellow-300 animate-spin" />
+              <span>✨ Google Flow Video (ใส่ Prompt สร้างคลิป)</span>
+            </button>
+            <button
+              onClick={() => setIsVoiceoverStudioOpen(true)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-purple-500/40 text-xs font-semibold text-purple-200 transition-all cursor-pointer shadow-sm"
+            >
+              <Mic className="w-3.5 h-3.5 text-pink-400" />
+              <span>🎙️ เสียงพากย์เป็นวิดีโอ</span>
             </button>
             <button
               onClick={() => setIsSettingsOpen(true)}
@@ -248,11 +257,19 @@ export default function DashboardPage() {
 
             <div className="flex flex-wrap items-center gap-3">
               <button
-                onClick={() => setIsVoiceoverStudioOpen(true)}
-                className="flex items-center justify-center gap-2 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white px-5 py-3.5 rounded-2xl font-bold text-sm shadow-xl shadow-pink-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer border border-pink-400/40"
+                onClick={() => setIsPromptToVideoOpen(true)}
+                className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-5 py-3.5 rounded-2xl font-bold text-sm shadow-xl shadow-purple-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer border border-purple-400/40"
               >
-                <Mic className="w-5 h-5 text-yellow-300 animate-pulse" />
-                <span>🎙️ อัปโหลดเสียงพากย์สร้างคลิปทันที</span>
+                <Sparkles className="w-5 h-5 text-yellow-300 animate-spin" />
+                <span>✨ ใส่ Prompt เดียวสร้างวิดีโอพร้อมโพสต์ (Google Flow)</span>
+              </button>
+
+              <button
+                onClick={() => setIsVoiceoverStudioOpen(true)}
+                className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-3.5 rounded-2xl font-semibold text-xs border border-slate-700 hover:border-purple-500/50 transition-all cursor-pointer"
+              >
+                <Mic className="w-4 h-4 text-pink-400" />
+                <span>🎙️ อัปโหลดเสียงพากย์</span>
               </button>
 
               <button
@@ -912,6 +929,13 @@ export default function DashboardPage() {
         <VoiceoverVideoStudioModal
           isOpen={isVoiceoverStudioOpen}
           onClose={() => setIsVoiceoverStudioOpen(false)}
+          onSuccess={showToast}
+        />
+
+        {/* Google Flow Prompt-to-Video Modal */}
+        <PromptToVideoFlowModal
+          isOpen={isPromptToVideoOpen}
+          onClose={() => setIsPromptToVideoOpen(false)}
           onSuccess={showToast}
         />
       </main>

@@ -4,7 +4,8 @@ from app.models.schemas import (
     ProductWithScores, ScoringWeights, ProductIntelligenceCard,
     BatchGenerationRequest, BatchGenerationResponse, GoogleFlowBatchExport,
     DashboardOverviewMetrics, DailyAIActionRecommendation, PlatformEnum,
-    VoiceoverGenerationRequest, VoiceoverGenerationResponse
+    VoiceoverGenerationRequest, VoiceoverGenerationResponse,
+    PromptToVideoRequest, PromptToVideoResponse
 )
 from app.data.thai_products_mock import SAMPLE_THAI_PRODUCTS
 from app.services.scoring_engine import score_product_catalog, calculate_product_scores
@@ -13,6 +14,7 @@ from app.agents.compliance_agent import check_and_sanitize_thai_script
 from app.agents.executive_agent import get_dashboard_metrics, get_executive_daily_recommendations
 from app.services.batch_engine import generate_daily_batch_clips
 from app.services.voice_analyzer import analyze_and_segment_voiceover
+from app.services.prompt_to_video_engine import generate_ready_video_from_prompt
 
 router = APIRouter(prefix="/api/v1")
 
@@ -122,5 +124,20 @@ def api_generate_from_voiceover(payload: VoiceoverGenerationRequest = Body(...))
         duration_sec=payload.duration_sec,
         style_mode=payload.style_mode,
         product_thumbnail=payload.product_thumbnail
+    )
+    return result
+
+@router.post("/video/prompt-to-video", response_model=PromptToVideoResponse)
+def api_prompt_to_video(payload: PromptToVideoRequest = Body(...)):
+    """
+    Google Flow style 1-Click Text-to-Video Engine:
+    Transforms raw user prompt into high-converting script, 4-shot storyboard,
+    voiceover synthesizer trigger, and ready-to-post video package.
+    """
+    result = generate_ready_video_from_prompt(
+        prompt=payload.prompt,
+        voice_gender=payload.voice_gender,
+        style_mode=payload.style_mode,
+        duration_sec=payload.duration_sec
     )
     return result

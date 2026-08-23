@@ -228,3 +228,25 @@ class VoiceoverGenerationResponse(BaseModel):
     google_flow_prompts: List[Dict[str, Any]]
     capcut_draft_payload: Dict[str, Any]
     summary_th: str
+
+# --- PROMPT TO READY VIDEO ENGINE (GOOGLE FLOW STYLE) SCHEMAS ---
+class PromptToVideoRequest(BaseModel):
+    prompt: str
+    voice_gender: str = "female"  # female, male
+    style_mode: str = "AVATAR_HYBRID"  # AVATAR_HYBRID, CINEMATIC_BROLL, UGC_VIRAL
+    duration_sec: int = 20
+
+class PromptToVideoResponse(BaseModel):
+    video_id: str
+    user_prompt: str
+    product_title_th: str
+    product_thumbnail: str
+    style_mode: str
+    voice_gender: str
+    duration_sec: int
+    full_voiceover_th: str
+    social_caption: str
+    compliance_status: str
+    compliance_flags: List[str] = []
+    shots: List[StoryboardShot]
+    summary_th: str

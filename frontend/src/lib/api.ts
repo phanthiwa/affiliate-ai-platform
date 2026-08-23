@@ -211,3 +211,47 @@ export async function generateVideoFromVoiceover(payload: VoiceoverGenerationReq
   if (!res.ok) throw new Error('Failed to generate video from voiceover');
   return res.json();
 }
+
+export interface PromptToVideoRequest {
+  prompt: string;
+  voice_gender?: string;
+  style_mode?: string;
+  duration_sec?: number;
+}
+
+export interface PromptToVideoResponse {
+  video_id: string;
+  user_prompt: string;
+  product_title_th: string;
+  product_thumbnail: string;
+  style_mode: string;
+  voice_gender: string;
+  duration_sec: number;
+  full_voiceover_th: string;
+  social_caption: string;
+  compliance_status: string;
+  compliance_flags: string[];
+  shots: {
+    shot_number: number;
+    start_sec: number;
+    end_sec: number;
+    visual_description_th: string;
+    image_prompt_for_ai: string;
+    camera_direction: string;
+    on_screen_text_th: string;
+    voiceover_th: string;
+    b_roll_suggestion: string;
+    sound_effect_cue?: string;
+  }[];
+  summary_th: string;
+}
+
+export async function generateVideoFromPrompt(payload: PromptToVideoRequest): Promise<PromptToVideoResponse> {
+  const res = await fetch(`${API_BASE}/video/prompt-to-video`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('Failed to generate video from prompt');
+  return res.json();
+}
