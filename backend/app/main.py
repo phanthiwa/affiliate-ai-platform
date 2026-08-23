@@ -19,6 +19,15 @@ app.add_middleware(
 
 app.include_router(api_router)
 
+@app.get("/")
+def root_endpoint():
+    return {
+        "status": "online",
+        "message": "Affiliate Growth OS Backend API is Live!",
+        "docs_url": "/docs",
+        "market": "Thailand (TikTok Shop, Shopee Video, FB Reels)"
+    }
+
 @app.get("/health")
 def health_check():
     return {
