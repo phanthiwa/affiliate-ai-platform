@@ -160,3 +160,54 @@ export async function batchApproveClips(clipIds: string[]) {
   if (!res.ok) throw new Error('Failed to batch approve clips');
   return res.json();
 }
+
+export interface VoiceoverGenerationRequest {
+  product_title_th: string;
+  voiceover_script?: string;
+  duration_sec?: number;
+  style_mode?: string;
+  product_thumbnail?: string;
+}
+
+export interface VoiceoverGenerationResponse {
+  video_id: string;
+  product_title_th: string;
+  style_mode: string;
+  duration_sec: number;
+  sanitized_script: string;
+  compliance_status: string;
+  compliance_flags: string[];
+  shots: {
+    shot_number: number;
+    start_sec: number;
+    end_sec: number;
+    visual_description_th: string;
+    image_prompt_for_ai: string;
+    camera_direction: string;
+    on_screen_text_th: string;
+    voiceover_th: string;
+    b_roll_suggestion: string;
+    sound_effect_cue?: string;
+  }[];
+  google_flow_prompts: {
+    shot: number;
+    timeframe: string;
+    duration: number;
+    image_prompt: string;
+    motion_prompt: string;
+    subtitle_th: string;
+    voice_segment: string;
+  }[];
+  capcut_draft_payload: any;
+  summary_th: string;
+}
+
+export async function generateVideoFromVoiceover(payload: VoiceoverGenerationRequest): Promise<VoiceoverGenerationResponse> {
+  const res = await fetch(`${API_BASE}/video/generate-from-voiceover`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('Failed to generate video from voiceover');
+  return res.json();
+}

@@ -207,3 +207,24 @@ class DashboardOverviewMetrics(BaseModel):
     top_winning_hook_th: str
     top_performing_angle: str
     daily_recommendations: List[DailyAIActionRecommendation]
+
+# --- VOICEOVER TO REALISTIC VIDEO STUDIO SCHEMAS ---
+class VoiceoverGenerationRequest(BaseModel):
+    product_title_th: str
+    voiceover_script: Optional[str] = None
+    duration_sec: float = 20.0
+    style_mode: str = "AVATAR_HYBRID"  # AVATAR_HYBRID, CINEMATIC_BROLL, UGC_VIRAL
+    product_thumbnail: Optional[str] = None
+
+class VoiceoverGenerationResponse(BaseModel):
+    video_id: str
+    product_title_th: str
+    style_mode: str
+    duration_sec: float
+    sanitized_script: str
+    compliance_status: str
+    compliance_flags: List[str] = []
+    shots: List[StoryboardShot]
+    google_flow_prompts: List[Dict[str, Any]]
+    capcut_draft_payload: Dict[str, Any]
+    summary_th: str

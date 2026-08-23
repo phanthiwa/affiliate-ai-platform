@@ -3,7 +3,8 @@ from typing import List, Optional
 from app.models.schemas import (
     ProductWithScores, ScoringWeights, ProductIntelligenceCard,
     BatchGenerationRequest, BatchGenerationResponse, GoogleFlowBatchExport,
-    DashboardOverviewMetrics, DailyAIActionRecommendation, PlatformEnum
+    DashboardOverviewMetrics, DailyAIActionRecommendation, PlatformEnum,
+    VoiceoverGenerationRequest, VoiceoverGenerationResponse
 )
 from app.data.thai_products_mock import SAMPLE_THAI_PRODUCTS
 from app.services.scoring_engine import score_product_catalog, calculate_product_scores
@@ -11,6 +12,7 @@ from app.agents.product_analyst import generate_product_intelligence_card
 from app.agents.compliance_agent import check_and_sanitize_thai_script
 from app.agents.executive_agent import get_dashboard_metrics, get_executive_daily_recommendations
 from app.services.batch_engine import generate_daily_batch_clips
+from app.services.voice_analyzer import analyze_and_segment_voiceover
 
 router = APIRouter(prefix="/api/v1")
 
@@ -107,3 +109,18 @@ async def api_get_tts_audio(text: str = Query(...), voice: str = Query("female")
         raise HTTPException(status_code=500, detail="Failed to synthesize Thai speech")
         
     return Response(content=audio_bytes, media_type="audio/mpeg")
+        
+@router.post("/video/generate-from-voiceover", response_model=VoiceoverGenerationResponse)
+def api_generate_from_voiceover(payload: VoiceoverGenerationRequest = Body(...)):
+    """
+    Process custom uploaded audio/voiceover text, parse script, segment timestamps,
+    and generate photorealistic video prompts & CapCut draft metadata.
+    """
+    result = analyze_and_segment_voiceover(
+        product_title_th=payload.product_title_th,
+        voiceover_script=payload.voiceover_script or "",
+        duration_sec=payload.duration_sec,
+        style_mode=payload.style_mode,
+        product_thumbnail=payload.product_thumbnail
+    )
+    return result
