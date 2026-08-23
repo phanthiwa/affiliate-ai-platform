@@ -94,3 +94,16 @@ def api_check_compliance(text: str = Body(..., embed=True)):
         "sanitized_text": sanitized,
         "flags": flags
     }
+
+@router.get("/video/tts-audio")
+async def api_get_tts_audio(text: str = Query(...), voice: str = Query("female")):
+    """Synthesize natural Thai speech audio for video player."""
+    from fastapi.responses import Response
+    from app.services.video_factory import synthesize_thai_audio, VOICE_FEMALE, VOICE_MALE
+    
+    selected_voice = VOICE_MALE if voice == "male" else VOICE_FEMALE
+    audio_bytes = await synthesize_thai_audio(text, selected_voice)
+    if not audio_bytes:
+        raise HTTPException(status_code=500, detail="Failed to synthesize Thai speech")
+        
+    return Response(content=audio_bytes, media_type="audio/mpeg")

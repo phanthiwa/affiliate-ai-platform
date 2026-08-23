@@ -3,11 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import {
   Sparkles, TrendingUp, DollarSign, Video, CheckCircle2,
-  Download, Layers, Search, ChevronRight, Eye, RefreshCw, Zap, Flame, Compass, ShieldCheck
+  Download, Layers, Search, ChevronRight, Eye, RefreshCw, Zap, Flame, Compass, ShieldCheck,
+  Share2, Play
 } from 'lucide-react';
 import {
   fetchDashboardOverview, fetchProducts, fetchProductIntelligence,
-  triggerDailyBatchClips, batchApproveClips,
+  triggerDailyBatchClips, batchApproveClips, API_BASE,
   Product, ProductIntelligenceCard, BatchGenerationResponse, DashboardOverview
 } from '@/lib/api';
 
@@ -414,12 +415,37 @@ export default function DashboardPage() {
                               </span>
                             </div>
 
-                            {/* Center Visual Prompt Cues */}
-                            <div className="relative z-10 text-center px-2 py-1 bg-black/50 backdrop-blur-sm rounded-lg border border-white/10 mx-2">
-                              <p className="text-[10px] text-purple-300 font-semibold uppercase tracking-wider">Visual Prompt (Google Flow)</p>
-                              <p className="text-[11px] text-white font-medium line-clamp-2 mt-0.5">
-                                {activeClip.script.storyboard_shots[0]?.image_prompt_for_ai || "Realistic Thai creator showcase"}
-                              </p>
+                            {/* Center Play Button & Visual Prompt Cues */}
+                            <div className="relative z-10 space-y-2">
+                              {/* Audio / Video Playback Trigger */}
+                              <div className="flex justify-center">
+                                <button
+                                  onClick={() => {
+                                    const audioUrl = `${API_BASE}/video/tts-audio?text=${encodeURIComponent(activeClip.script.full_voiceover_th)}&voice=female`;
+                                    const audio = new Audio(audioUrl);
+                                    audio.play().catch(() => {
+                                      // Fallback to browser Web Speech if network blocks audio stream
+                                      if ('speechSynthesis' in window) {
+                                        const utterance = new SpeechSynthesisUtterance(activeClip.script.full_voiceover_th);
+                                        utterance.lang = 'th-TH';
+                                        window.speechSynthesis.speak(utterance);
+                                      }
+                                    });
+                                    showToast("🔊 กำลังเล่นเสียงพากย์ AI (Thai Neural Voice)...");
+                                  }}
+                                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold text-xs shadow-xl shadow-pink-600/40 hover:scale-105 active:scale-95 transition-all cursor-pointer border border-white/20"
+                                >
+                                  <Play className="w-3.5 h-3.5 fill-white" />
+                                  <span>เล่นคลิป & ฟังเสียงพากย์ AI</span>
+                                </button>
+                              </div>
+
+                              <div className="text-center px-2.5 py-1.5 bg-black/60 backdrop-blur-md rounded-lg border border-white/10 mx-1">
+                                <p className="text-[10px] text-purple-300 font-semibold uppercase tracking-wider">Visual Prompt (AI Generated Scene)</p>
+                                <p className="text-[11px] text-white font-medium line-clamp-2 mt-0.5">
+                                  {activeClip.script.storyboard_shots[0]?.image_prompt_for_ai || "Realistic Thai creator showcase"}
+                                </p>
+                              </div>
                             </div>
 
                             {/* Bottom TikTok Style Overlay */}
@@ -723,6 +749,11 @@ export default function DashboardPage() {
                 >
                   สร้าง 5 คลิปทันที
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Social Accounts Connection Modal */}
         {isSettingsOpen && (
           <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
