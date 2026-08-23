@@ -1,0 +1,76 @@
+{
+  "name": "Affiliate Content Video Generator Flow",
+  "description": "Google Flow pipeline for automated 9:16 vertical affiliate video rendering from Affiliate Growth OS",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "node_webhook_trigger",
+      "type": "google.flow.triggers.WebhookTrigger",
+      "name": "1. Receive Batch Payload from Cloud Run",
+      "config": {
+        "path": "/webhook/generate-batch",
+        "method": "POST",
+        "expected_schema": "GoogleFlowBatchExport"
+      }
+    },
+    {
+      "id": "node_loop_clips",
+      "type": "google.flow.logic.ForEach",
+      "name": "2. Iterate 15 Clips",
+      "config": {
+        "items": "{{node_webhook_trigger.body.google_flow_nodes}}"
+      }
+    },
+    {
+      "id": "node_tts_synth",
+      "type": "google.cloud.text_to_speech.SynthesizeSpeech",
+      "name": "3. Synthesize Thai Voiceover (Neural)",
+      "config": {
+        "text": "{{item.voiceover_script}}",
+        "voice": {
+          "language_code": "th-TH",
+          "name": "{{item.thai_voice_actor}}"
+        },
+        "audio_config": {
+          "audio_encoding": "MP3",
+          "speaking_rate": 1.05
+        }
+      }
+    },
+    {
+      "id": "node_visual_gen",
+      "type": "google.vertex.imagen.GenerateImages",
+      "name": "4. Generate Shot Visuals (Imagen 3 / Veo)",
+      "config": {
+        "prompts": "{{item.visual_prompts}}",
+        "aspect_ratio": "9:16",
+        "output_format": "PNG"
+      }
+    },
+    {
+      "id": "node_video_assembly",
+      "type": "google.cloud.video_intelligence.AssembleClip",
+      "name": "5. Burn Thai Captions & Assemble 9:16 MP4",
+      "config": {
+        "visual_layers": "{{node_visual_gen.images}}",
+        "audio_track": "{{node_tts_synth.audio_url}}",
+        "burned_captions": "{{item.burned_captions}}",
+        "duration": "{{item.duration_sec}}"
+      }
+    },
+    {
+      "id": "node_callback",
+      "type": "google.flow.actions.HttpRequest",
+      "name": "6. Report Ready Status to Cloud Run",
+      "config": {
+        "url": "{{item.webhook_callback_url}}",
+        "method": "POST",
+        "body": {
+          "clip_id": "{{item.clip_id}}",
+          "status": "READY_FOR_REVIEW",
+          "rendered_video_url": "{{node_video_assembly.video_url}}"
+        }
+      }
+    }
+  ]
+}
