@@ -22,6 +22,7 @@ export default function DashboardPage() {
   const [isGeneratingBatch, setIsGeneratingBatch] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     loadInitialData();
@@ -138,7 +139,14 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-purple-500/40 text-xs font-semibold text-purple-200 transition-all cursor-pointer shadow-sm"
+            >
+              <Share2 className="w-3.5 h-3.5 text-pink-400" />
+              <span>ผูกบัญชีโซเชียล</span>
+            </button>
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700 text-xs">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
               <span className="text-slate-300 font-medium">Google Flow: พร้อมเชื่อมต่อ</span>
@@ -714,6 +722,101 @@ export default function DashboardPage() {
                   className="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-lg shadow-purple-600/30 cursor-pointer"
                 >
                   สร้าง 5 คลิปทันที
+                </button>
+        {/* Social Accounts Connection Modal */}
+        {isSettingsOpen && (
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+            <div className="bg-slate-900 border border-purple-500/40 rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-6">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                <div className="flex items-center gap-2">
+                  <Share2 className="w-5 h-5 text-pink-400" />
+                  <h3 className="text-lg font-bold text-white">ผูกบัญชีโซเชียลสำหรับการโพสต์อัตโนมัติ</h3>
+                </div>
+                <button
+                  onClick={() => setIsSettingsOpen(false)}
+                  className="text-slate-400 hover:text-white text-lg font-bold px-2 py-1 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3 text-xs">
+                <p className="text-slate-300">
+                  ระบบเชื่อมต่อผ่าน **Official Open API (OAuth 2.0)** อย่างปลอดภัย ไม่มีการขอรหัสผ่านส่วนตัว 100%
+                </p>
+
+                {/* TikTok Shop Account */}
+                <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center font-bold text-sm">
+                      TK
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-200">TikTok Shop Creator</p>
+                      <p className="text-[11px] text-emerald-400">● เชื่อมต่อแล้ว: @aom_affiliate_pro</p>
+                    </div>
+                  </div>
+                  <button className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold transition-colors">
+                    ตั้งค่าใหม่
+                  </button>
+                </div>
+
+                {/* Shopee Video Account */}
+                <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold text-sm">
+                      SP
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-200">Shopee Video Channel</p>
+                      <p className="text-[11px] text-emerald-400">● เชื่อมต่อแล้ว: Aom Review Official</p>
+                    </div>
+                  </div>
+                  <button className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold transition-colors">
+                    ตั้งค่าใหม่
+                  </button>
+                </div>
+
+                {/* Facebook Reels / Page */}
+                <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">
+                      FB
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-200">Facebook Page / Reels</p>
+                      <p className="text-[11px] text-emerald-400">● เชื่อมต่อแล้ว: Aom ป้ายยาของดี</p>
+                    </div>
+                  </div>
+                  <button className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold transition-colors">
+                    ตั้งค่าใหม่
+                  </button>
+                </div>
+
+                {/* Google Flow Direct Webhook */}
+                <div className="p-3.5 rounded-xl bg-slate-950 border border-purple-500/30 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-purple-300 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5" /> Google Flow Webhook URL
+                    </span>
+                    <span className="text-[10px] text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded">
+                      Active
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    defaultValue="https://flow.google.internal/webhook/v1/generate-clips"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-slate-300 text-[11px] focus:outline-none focus:border-purple-500"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-slate-800 flex justify-end gap-3">
+                <button
+                  onClick={() => setIsSettingsOpen(false)}
+                  className="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-lg shadow-purple-600/30 cursor-pointer"
+                >
+                  บันทึกการตั้งค่า
                 </button>
               </div>
             </div>
