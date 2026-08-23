@@ -117,6 +117,8 @@ class StoryboardShot(BaseModel):
     voiceover_th: str
     b_roll_suggestion: str
     sound_effect_cue: Optional[str] = None
+    scene_image_url: Optional[str] = None
+    video_motion_type: Optional[str] = None
 
 class ThaiScript(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))

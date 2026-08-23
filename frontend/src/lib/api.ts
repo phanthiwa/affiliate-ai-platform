@@ -283,6 +283,8 @@ export interface FlowOmniStoryboardResponse {
     voiceover_th: string;
     b_roll_suggestion: string;
     sound_effect_cue?: string;
+    scene_image_url?: string;
+    video_motion_type?: string;
   }[];
   universal_flow_omni_prompt: string;
   full_voiceover_th: string;
