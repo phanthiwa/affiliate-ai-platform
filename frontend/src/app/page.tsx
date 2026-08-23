@@ -399,15 +399,24 @@ export default function DashboardPage() {
                           {/* 9:16 Vertical TikTok Simulator Player */}
                           <div className="sm:col-span-5 relative rounded-2xl overflow-hidden bg-slate-950 aspect-[9/16] max-h-[420px] mx-auto border-2 border-purple-500/50 shadow-2xl flex flex-col justify-between p-3 select-none group">
                             {/* Background Image / Motion Simulator Video Layer */}
-                            <div className="absolute inset-0 z-0">
-                              <img
-                                src={activeClip.product_thumbnail || "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&auto=format&fit=crop&q=60"}
-                                alt="Product Preview"
-                                className={`w-full h-full object-cover transition-all duration-700 ${
-                                  isPlayingVideo ? 'scale-110 brightness-90 animate-pulse' : 'brightness-75 scale-100'
-                                }`}
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/90"></div>
+                            <div className="absolute inset-0 z-0 overflow-hidden">
+                              {isPlayingVideo ? (
+                                <video
+                                  src={activeClip.preview_video_url || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"}
+                                  autoPlay
+                                  loop
+                                  playsInline
+                                  muted={isMuted}
+                                  className="w-full h-full object-cover brightness-90 scale-105"
+                                />
+                              ) : (
+                                <img
+                                  src={activeClip.product_thumbnail || "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&auto=format&fit=crop&q=60"}
+                                  alt="Product Preview"
+                                  className="w-full h-full object-cover brightness-75 scale-100 transition-all duration-700"
+                                />
+                              )}
+                              <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/90 pointer-events-none"></div>
                             </div>
 
                             {/* Top Bar on Phone */}
