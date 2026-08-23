@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Sparkles, TrendingUp, DollarSign, Video, CheckCircle2,
   Download, Layers, Search, ChevronRight, Eye, RefreshCw, Zap, Flame, Compass, ShieldCheck,
-  Share2, Play, Pause, Volume2, VolumeX, RotateCcw, Mic
+  Share2, Play, Pause, Volume2, VolumeX, RotateCcw, Mic, Wand2
 } from 'lucide-react';
 import {
   fetchDashboardOverview, fetchProducts, fetchProductIntelligence,
@@ -13,6 +13,7 @@ import {
 } from '@/lib/api';
 import VoiceoverVideoStudioModal from '@/components/VoiceoverVideoStudioModal';
 import PromptToVideoFlowModal from '@/components/PromptToVideoFlowModal';
+import FlowOmniStudioModal from '@/components/FlowOmniStudioModal';
 
 export default function DashboardPage() {
   const [dashboard, setDashboard] = useState<DashboardOverview | null>(null);
@@ -28,6 +29,8 @@ export default function DashboardPage() {
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [isVoiceoverStudioOpen, setIsVoiceoverStudioOpen] = useState<boolean>(false);
   const [isPromptToVideoOpen, setIsPromptToVideoOpen] = useState<boolean>(false);
+  const [isFlowOmniStudioOpen, setIsFlowOmniStudioOpen] = useState<boolean>(false);
+  const [flowOmniSelectedProductId, setFlowOmniSelectedProductId] = useState<string | undefined>(undefined);
   const [isPlayingVideo, setIsPlayingVideo] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [currentPlaySec, setCurrentPlaySec] = useState<number>(0);
@@ -149,18 +152,28 @@ export default function DashboardPage() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setIsPromptToVideoOpen(true)}
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border border-purple-400/50 text-xs font-bold text-white transition-all cursor-pointer shadow-md shadow-purple-600/30 hover:scale-105"
+              onClick={() => {
+                setFlowOmniSelectedProductId(undefined);
+                setIsFlowOmniStudioOpen(true);
+              }}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 via-pink-500 to-purple-600 hover:from-amber-300 hover:to-pink-400 text-slate-950 font-black text-xs transition-all cursor-pointer shadow-md shadow-pink-500/30 hover:scale-105"
             >
-              <Sparkles className="w-3.5 h-3.5 text-yellow-300 animate-spin" />
-              <span>✨ Google Flow Video (ใส่ Prompt สร้างคลิป)</span>
+              <Sparkles className="w-3.5 h-3.5 text-slate-950 animate-bounce" />
+              <span>🌟 Flow Omni (10s POV Studio)</span>
+            </button>
+            <button
+              onClick={() => setIsPromptToVideoOpen(true)}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-purple-950/70 hover:bg-purple-900 border border-purple-400/40 text-xs font-semibold text-purple-200 transition-all cursor-pointer"
+            >
+              <Wand2 className="w-3.5 h-3.5 text-yellow-300" />
+              <span>✨ Prompt-to-Video</span>
             </button>
             <button
               onClick={() => setIsVoiceoverStudioOpen(true)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-purple-500/40 text-xs font-semibold text-purple-200 transition-all cursor-pointer shadow-sm"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-all cursor-pointer"
             >
               <Mic className="w-3.5 h-3.5 text-pink-400" />
-              <span>🎙️ เสียงพากย์เป็นวิดีโอ</span>
+              <span>🎙️ เสียงพากย์</span>
             </button>
             <button
               onClick={() => setIsSettingsOpen(true)}
@@ -257,11 +270,22 @@ export default function DashboardPage() {
 
             <div className="flex flex-wrap items-center gap-3">
               <button
-                onClick={() => setIsPromptToVideoOpen(true)}
-                className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-5 py-3.5 rounded-2xl font-bold text-sm shadow-xl shadow-purple-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer border border-purple-400/40"
+                onClick={() => {
+                  setFlowOmniSelectedProductId(undefined);
+                  setIsFlowOmniStudioOpen(true);
+                }}
+                className="flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 via-pink-500 to-purple-600 hover:from-amber-300 hover:to-pink-400 text-slate-950 px-5 py-3.5 rounded-2xl font-black text-sm shadow-xl shadow-pink-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer border border-amber-300/50"
               >
-                <Sparkles className="w-5 h-5 text-yellow-300 animate-spin" />
-                <span>✨ ใส่ Prompt เดียวสร้างวิดีโอพร้อมโพสต์ (Google Flow)</span>
+                <Sparkles className="w-5 h-5 text-slate-950 animate-bounce" />
+                <span>🌟 Flow Omni 5 ฉาก (10s POV Bright Premium)</span>
+              </button>
+
+              <button
+                onClick={() => setIsPromptToVideoOpen(true)}
+                className="flex items-center justify-center gap-2 bg-purple-950/80 hover:bg-purple-900 text-purple-200 px-4 py-3.5 rounded-2xl font-semibold text-xs border border-purple-500/40 hover:border-purple-400 transition-all cursor-pointer"
+              >
+                <Wand2 className="w-4 h-4 text-yellow-300" />
+                <span>✨ Prompt-to-Video</span>
               </button>
 
               <button
@@ -714,7 +738,16 @@ export default function DashboardPage() {
                       </span>
                     </td>
                     <td className="py-3 px-3 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          onClick={() => {
+                            setFlowOmniSelectedProductId(p.id);
+                            setIsFlowOmniStudioOpen(true);
+                          }}
+                          className="px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-pink-500 text-slate-950 text-[11px] font-black transition-all shadow-sm cursor-pointer hover:scale-105"
+                        >
+                          🌟 10s Flow Omni
+                        </button>
                         <button
                           onClick={() => handleOpenIntelligence(p.id)}
                           className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-medium transition-colors cursor-pointer"
@@ -725,7 +758,7 @@ export default function DashboardPage() {
                           onClick={() => handleGenerateDailyBatch([p.id])}
                           className="px-2.5 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-[11px] font-bold transition-all shadow-sm cursor-pointer"
                         >
-                          สร้างคลิป
+                          15 คลิป
                         </button>
                       </div>
                     </td>
@@ -936,6 +969,15 @@ export default function DashboardPage() {
         <PromptToVideoFlowModal
           isOpen={isPromptToVideoOpen}
           onClose={() => setIsPromptToVideoOpen(false)}
+          onSuccess={showToast}
+        />
+
+        {/* Flow Omni 5-Scene POV Studio Modal */}
+        <FlowOmniStudioModal
+          isOpen={isFlowOmniStudioOpen}
+          onClose={() => setIsFlowOmniStudioOpen(false)}
+          products={products}
+          initialProductId={flowOmniSelectedProductId}
           onSuccess={showToast}
         />
       </main>

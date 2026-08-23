@@ -255,3 +255,48 @@ export async function generateVideoFromPrompt(payload: PromptToVideoRequest): Pr
   if (!res.ok) throw new Error('Failed to generate video from prompt');
   return res.json();
 }
+
+export interface FlowOmniStoryboardRequest {
+  product_id?: string;
+  product_title_th?: string;
+  product_thumbnail?: string;
+  category?: string;
+  usp_th?: string[];
+}
+
+export interface FlowOmniStoryboardResponse {
+  video_id: string;
+  product_title_th: string;
+  product_thumbnail: string;
+  category: string;
+  style_mode: string;
+  total_duration_sec: number;
+  shots_count: number;
+  shots: {
+    shot_number: number;
+    start_sec: number;
+    end_sec: number;
+    visual_description_th: string;
+    image_prompt_for_ai: string;
+    camera_direction: string;
+    on_screen_text_th: string;
+    voiceover_th: string;
+    b_roll_suggestion: string;
+    sound_effect_cue?: string;
+  }[];
+  universal_flow_omni_prompt: string;
+  full_voiceover_th: string;
+  compliance_status: string;
+  compliance_flags: string[];
+  summary_th: string;
+}
+
+export async function generateFlowOmniStoryboard(payload: FlowOmniStoryboardRequest): Promise<FlowOmniStoryboardResponse> {
+  const res = await fetch(`${API_BASE}/video/flow-omni-storyboard`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('Failed to generate Flow Omni storyboard');
+  return res.json();
+}

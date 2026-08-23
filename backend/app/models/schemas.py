@@ -250,3 +250,26 @@ class PromptToVideoResponse(BaseModel):
     compliance_flags: List[str] = []
     shots: List[StoryboardShot]
     summary_th: str
+
+# --- FLOW OMNI 5-SCENE POV STORYBOARD (10s BRIGHT PREMIUM LIFESTYLE) SCHEMAS ---
+class FlowOmniStoryboardRequest(BaseModel):
+    product_id: Optional[str] = None
+    product_title_th: Optional[str] = None
+    product_thumbnail: Optional[str] = None
+    category: Optional[str] = None
+    usp_th: Optional[List[str]] = None
+
+class FlowOmniStoryboardResponse(BaseModel):
+    video_id: str
+    product_title_th: str
+    product_thumbnail: str
+    category: str
+    style_mode: str = "BRIGHT_PREMIUM_LIFESTYLE"
+    total_duration_sec: float = 10.0
+    shots_count: int = 5
+    shots: List[StoryboardShot]
+    universal_flow_omni_prompt: str
+    full_voiceover_th: str
+    compliance_status: str
+    compliance_flags: List[str] = []
+    summary_th: str

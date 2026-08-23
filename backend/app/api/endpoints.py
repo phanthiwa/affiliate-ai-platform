@@ -5,7 +5,8 @@ from app.models.schemas import (
     BatchGenerationRequest, BatchGenerationResponse, GoogleFlowBatchExport,
     DashboardOverviewMetrics, DailyAIActionRecommendation, PlatformEnum,
     VoiceoverGenerationRequest, VoiceoverGenerationResponse,
-    PromptToVideoRequest, PromptToVideoResponse
+    PromptToVideoRequest, PromptToVideoResponse,
+    FlowOmniStoryboardRequest, FlowOmniStoryboardResponse
 )
 from app.data.thai_products_mock import SAMPLE_THAI_PRODUCTS
 from app.services.scoring_engine import score_product_catalog, calculate_product_scores
@@ -15,6 +16,7 @@ from app.agents.executive_agent import get_dashboard_metrics, get_executive_dail
 from app.services.batch_engine import generate_daily_batch_clips
 from app.services.voice_analyzer import analyze_and_segment_voiceover
 from app.services.prompt_to_video_engine import generate_ready_video_from_prompt
+from app.services.flow_omni_engine import generate_flow_omni_storyboard
 
 router = APIRouter(prefix="/api/v1")
 
@@ -139,5 +141,21 @@ def api_prompt_to_video(payload: PromptToVideoRequest = Body(...)):
         voice_gender=payload.voice_gender,
         style_mode=payload.style_mode,
         duration_sec=payload.duration_sec
+    )
+    return result
+
+@router.post("/video/flow-omni-storyboard", response_model=FlowOmniStoryboardResponse)
+def api_flow_omni_storyboard(payload: FlowOmniStoryboardRequest = Body(...)):
+    """
+    Generate a 10-second 5-scene POV Storyboard (Bright Premium Lifestyle)
+    and ready-to-copy Universal Prompt for Flow Omni (Omni Flash 10s model)
+    from uploaded or winning catalog products.
+    """
+    result = generate_flow_omni_storyboard(
+        product_id=payload.product_id,
+        product_title_th=payload.product_title_th,
+        product_thumbnail=payload.product_thumbnail,
+        category=payload.category,
+        usp_th=payload.usp_th
     )
     return result
